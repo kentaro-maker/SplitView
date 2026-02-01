@@ -17,6 +17,8 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 
 Use `Ctrl + Option + [1-9]` with numpad layout:
 
+### Single Key - 1/3 × 1/3 Grid
+
 ```
 ┌─────────┬─────────┬─────────┐
 │ ⌃⌥ 7    │ ⌃⌥ 8    │ ⌃⌥ 9    │
@@ -30,7 +32,34 @@ Use `Ctrl + Option + [1-9]` with numpad layout:
 └─────────┴─────────┴─────────┘
 ```
 
-Each cell is exactly **1/3 × 1/3** of your screen's usable area (excluding menu bar and Dock).
+### Two Keys Simultaneously - Half Positions
+
+Hold two adjacent keys together for half-size windows:
+
+**Horizontal (2/3 width × 1/3 height):**
+```
+┌─────────────────┬─────────────────┐
+│    ⌃⌥ 7+8       │     ⌃⌥ 8+9      │
+│  Top-Left Half  │  Top-Right Half │
+├─────────────────┼─────────────────┤
+│    ⌃⌥ 4+5       │     ⌃⌥ 5+6      │
+│  Mid-Left Half  │  Mid-Right Half │
+├─────────────────┼─────────────────┤
+│    ⌃⌥ 1+2       │     ⌃⌥ 2+3      │
+│  Bot-Left Half  │  Bot-Right Half │
+└─────────────────┴─────────────────┘
+```
+
+**Vertical (1/3 width × 2/3 height):**
+```
+┌─────────┬─────────┬─────────┐
+│ ⌃⌥ 7+4  │ ⌃⌥ 8+5  │ ⌃⌥ 9+6  │
+│Left-Top │Ctr-Top  │Right-Top│
+├─────────┼─────────┼─────────┤
+│ ⌃⌥ 4+1  │ ⌃⌥ 5+2  │ ⌃⌥ 6+3  │
+│Left-Bot │Ctr-Bot  │Right-Bot│
+└─────────┴─────────┴─────────┘
+```
 
 ## Installation
 

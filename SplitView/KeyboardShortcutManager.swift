@@ -9,30 +9,45 @@ class KeyboardShortcutManager {
     private var eventTap: CFMachPort?
     private var runLoopSource: CFRunLoopSource?
 
+    // Track currently held number keys (for combo detection)
+    private var heldKeys: Set<Int> = []
+    private var lastActionTime: Date = .distantPast
+
     // Key codes for numpad keys 1-9
-    private let numpadKeyCodeMap: [Int64: GridPosition] = [
-        83: .bottomLeft,    // Numpad 1
-        84: .bottomCenter,  // Numpad 2
-        85: .bottomRight,   // Numpad 3
-        86: .middleLeft,    // Numpad 4
-        87: .center,        // Numpad 5 (full screen)
-        88: .middleRight,   // Numpad 6
-        89: .topLeft,       // Numpad 7
-        91: .topCenter,     // Numpad 8
-        92: .topRight       // Numpad 9
+    private let numpadKeyCodeToNumber: [Int64: Int] = [
+        83: 1, 84: 2, 85: 3,
+        86: 4, 87: 5, 88: 6,
+        89: 7, 91: 8, 92: 9
     ]
 
-    // Also support regular number keys as fallback
-    private let regularKeyCodeMap: [Int64: GridPosition] = [
-        18: .bottomLeft,    // 1
-        19: .bottomCenter,  // 2
-        20: .bottomRight,   // 3
-        21: .middleLeft,    // 4
-        23: .center,        // 5
-        22: .middleRight,   // 6
-        26: .topLeft,       // 7
-        28: .topCenter,     // 8
-        25: .topRight       // 9
+    // Regular number keys
+    private let regularKeyCodeToNumber: [Int64: Int] = [
+        18: 1, 19: 2, 20: 3,
+        21: 4, 23: 5, 22: 6,
+        26: 7, 28: 8, 25: 9
+    ]
+
+    // Valid half-position combos (sorted key pairs)
+    private let halfPositionCombos: [Set<Int>: HalfPosition] = [
+        [7, 8]: .topLeftHalf,
+        [8, 9]: .topRightHalf,
+        [4, 5]: .middleLeftHalf,
+        [5, 6]: .middleRightHalf,
+        [1, 2]: .bottomLeftHalf,
+        [2, 3]: .bottomRightHalf,
+        [7, 4]: .leftTopHalf,
+        [4, 1]: .leftBottomHalf,
+        [8, 5]: .centerTopHalf,
+        [5, 2]: .centerBottomHalf,
+        [9, 6]: .rightTopHalf,
+        [6, 3]: .rightBottomHalf
+    ]
+
+    // Number to GridPosition
+    private let numberToPosition: [Int: GridPosition] = [
+        1: .bottomLeft, 2: .bottomCenter, 3: .bottomRight,
+        4: .middleLeft, 5: .center, 6: .middleRight,
+        7: .topLeft, 8: .topCenter, 9: .topRight
     ]
 
     private init() {}
@@ -41,9 +56,9 @@ class KeyboardShortcutManager {
     func start() {
         guard eventTap == nil else { return }
 
-        let eventMask = (1 << CGEventType.keyDown.rawValue)
+        // Listen for both keyDown and keyUp
+        let eventMask = (1 << CGEventType.keyDown.rawValue) | (1 << CGEventType.keyUp.rawValue)
 
-        // Create event tap
         eventTap = CGEvent.tapCreate(
             tap: .cgSessionEventTap,
             place: .headInsertEventTap,
@@ -53,7 +68,6 @@ class KeyboardShortcutManager {
                 guard let refcon = refcon else {
                     return Unmanaged.passRetained(event)
                 }
-
                 let manager = Unmanaged<KeyboardShortcutManager>.fromOpaque(refcon).takeUnretainedValue()
                 return manager.handleEvent(proxy: proxy, type: type, event: event)
             },
@@ -72,18 +86,16 @@ class KeyboardShortcutManager {
         if let eventTap = eventTap {
             CGEvent.tapEnable(tap: eventTap, enable: false)
         }
-
         if let runLoopSource = runLoopSource {
             CFRunLoopRemoveSource(CFRunLoopGetCurrent(), runLoopSource, .commonModes)
         }
-
         eventTap = nil
         runLoopSource = nil
     }
 
     /// Handle a keyboard event
     private func handleEvent(proxy: CGEventTapProxy, type: CGEventType, event: CGEvent) -> Unmanaged<CGEvent>? {
-        // Handle tap disabled events (re-enable the tap)
+        // Re-enable tap if disabled
         if type == .tapDisabledByTimeout || type == .tapDisabledByUserInput {
             if let eventTap = eventTap {
                 CGEvent.tapEnable(tap: eventTap, enable: true)
@@ -91,51 +103,70 @@ class KeyboardShortcutManager {
             return Unmanaged.passRetained(event)
         }
 
+        let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
+
+        // Get number from key code
+        let number = numpadKeyCodeToNumber[keyCode] ?? regularKeyCodeToNumber[keyCode]
+
+        // Track key up/down for combo detection
+        if let num = number {
+            if type == .keyUp {
+                heldKeys.remove(num)
+                return Unmanaged.passRetained(event)
+            }
+            // keyDown - add to held keys
+            heldKeys.insert(num)
+        }
+
+        // Only process keyDown
+        guard type == .keyDown else {
+            return Unmanaged.passRetained(event)
+        }
+
         // Check modifiers
         let flags = event.flags
         let hasCtrl = flags.contains(.maskControl)
-        let hasFn = flags.contains(.maskSecondaryFn)  // Globe/fn key
+        let hasFn = flags.contains(.maskSecondaryFn)
         let hasCmd = flags.contains(.maskCommand)
         let hasShift = flags.contains(.maskShift)
         let hasOption = flags.contains(.maskAlternate)
 
-        // Get the key code
-        let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
-
-        // Accept either:
-        // 1. Ctrl + Globe (fn) + numpad/number
-        // 2. Ctrl + Option + numpad/number (fallback)
         let validModifiers = (hasCtrl && hasFn && !hasCmd && !hasShift) ||
                             (hasCtrl && hasOption && !hasCmd && !hasShift)
 
-        guard validModifiers else {
+        guard validModifiers, number != nil else {
             return Unmanaged.passRetained(event)
         }
 
-        // Check numpad keys first, then regular number keys
-        let position: GridPosition?
-        if let numpadPosition = numpadKeyCodeMap[keyCode] {
-            position = numpadPosition
-        } else if let regularPosition = regularKeyCodeMap[keyCode] {
-            position = regularPosition
-        } else {
-            position = nil
+        // Debounce: prevent double-triggering
+        let now = Date()
+        guard now.timeIntervalSince(lastActionTime) > 0.1 else {
+            return nil
         }
 
-        guard let targetPosition = position else {
-            return Unmanaged.passRetained(event)
-        }
-
-        // Move the window
-        DispatchQueue.main.async {
-            let success = WindowManager.shared.moveWindow(to: targetPosition)
-            if !success {
-                NSSound.beep()
+        // Check for half-position combo (two keys held)
+        if heldKeys.count >= 2 {
+            if let halfPos = halfPositionCombos[heldKeys] {
+                lastActionTime = now
+                DispatchQueue.main.async {
+                    let success = WindowManager.shared.moveWindowToHalf(halfPos)
+                    if !success { NSSound.beep() }
+                }
+                return nil
             }
         }
 
-        // Consume the event (don't pass it to other apps)
-        return nil
+        // Single key - regular grid position
+        if let num = number, let position = numberToPosition[num] {
+            lastActionTime = now
+            DispatchQueue.main.async {
+                let success = WindowManager.shared.moveWindow(to: position)
+                if !success { NSSound.beep() }
+            }
+            return nil
+        }
+
+        return Unmanaged.passRetained(event)
     }
 
     deinit {
