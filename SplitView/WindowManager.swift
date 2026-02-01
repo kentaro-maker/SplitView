@@ -233,6 +233,84 @@ class WindowManager {
             cocoaY = visible.origin.y
             width = cellW
             height = 2 * cellH
+
+        // Corner quarters (2/3 width × 2/3 height)
+        case .topLeftQuarter:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y + cellH
+            width = 2 * cellW
+            height = 2 * cellH
+        case .topRightQuarter:
+            cocoaX = visible.origin.x + cellW
+            cocoaY = visible.origin.y + cellH
+            width = 2 * cellW
+            height = 2 * cellH
+        case .bottomLeftQuarter:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = 2 * cellW
+            height = 2 * cellH
+        case .bottomRightQuarter:
+            cocoaX = visible.origin.x + cellW
+            cocoaY = visible.origin.y
+            width = 2 * cellW
+            height = 2 * cellH
+
+        // True halves (1/2 screen)
+        case .leftHalf:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = visible.width / 2
+            height = visible.height
+        case .rightHalf:
+            cocoaX = visible.origin.x + visible.width / 2
+            cocoaY = visible.origin.y
+            width = visible.width / 2
+            height = visible.height
+        case .topHalf:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y + visible.height / 2
+            width = visible.width
+            height = visible.height / 2
+        case .bottomHalf:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = visible.width
+            height = visible.height / 2
+
+        // True corners (1/4 screen - 1/2 × 1/2)
+        case .topLeftCorner:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y + visible.height / 2
+            width = visible.width / 2
+            height = visible.height / 2
+        case .topRightCorner:
+            cocoaX = visible.origin.x + visible.width / 2
+            cocoaY = visible.origin.y + visible.height / 2
+            width = visible.width / 2
+            height = visible.height / 2
+        case .bottomLeftCorner:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = visible.width / 2
+            height = visible.height / 2
+        case .bottomRightCorner:
+            cocoaX = visible.origin.x + visible.width / 2
+            cocoaY = visible.origin.y
+            width = visible.width / 2
+            height = visible.height / 2
+
+        // Full screen and center half
+        case .fullScreen:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = visible.width
+            height = visible.height
+        case .centerHalf:
+            cocoaX = visible.origin.x + visible.width / 4
+            cocoaY = visible.origin.y + visible.height / 4
+            width = visible.width / 2
+            height = visible.height / 2
         }
 
         // Convert to AX coordinates

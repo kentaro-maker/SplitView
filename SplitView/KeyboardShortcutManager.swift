@@ -12,6 +12,8 @@ class KeyboardShortcutManager {
     // Track currently held number keys (for combo detection)
     private var heldKeys: Set<Int> = []
     private var lastActionTime: Date = .distantPast
+    private var comboTriggered: Bool = false  // Track if combo was triggered during this key sequence
+    private var lastFiveWasFullScreen: Bool = false  // Toggle state for key 5
 
     // Key codes for numpad keys 1-9
     private let numpadKeyCodeToNumber: [Int64: Int] = [
@@ -40,7 +42,22 @@ class KeyboardShortcutManager {
         [8, 5]: .centerTopHalf,
         [5, 2]: .centerBottomHalf,
         [9, 6]: .rightTopHalf,
-        [6, 3]: .rightBottomHalf
+        [6, 3]: .rightBottomHalf,
+        // Corner quarters (2/3 × 2/3)
+        [7, 5]: .topLeftQuarter,
+        [9, 5]: .topRightQuarter,
+        [1, 5]: .bottomLeftQuarter,
+        [3, 5]: .bottomRightQuarter,
+        // True halves (1/2 screen)
+        [7, 1]: .leftHalf,
+        [9, 3]: .rightHalf,
+        [7, 9]: .topHalf,
+        [1, 3]: .bottomHalf,
+        // True corners (1/4 screen) - 3 key combos
+        [1, 7, 9]: .topLeftCorner,
+        [3, 7, 9]: .topRightCorner,
+        [1, 3, 7]: .bottomLeftCorner,
+        [1, 3, 9]: .bottomRightCorner
     ]
 
     // Number to GridPosition
@@ -48,6 +65,19 @@ class KeyboardShortcutManager {
         1: .bottomLeft, 2: .bottomCenter, 3: .bottomRight,
         4: .middleLeft, 5: .center, 6: .middleRight,
         7: .topLeft, 8: .topCenter, 9: .topRight
+    ]
+
+    // Number to HalfPosition (when Option+Fn+Ctrl is pressed)
+    private let numberToHalfPosition: [Int: HalfPosition] = [
+        1: .bottomLeftCorner,   // 1/2 × 1/2 bottom-left
+        2: .bottomHalf,         // full × 1/2 bottom
+        3: .bottomRightCorner,  // 1/2 × 1/2 bottom-right
+        4: .leftHalf,           // 1/2 × full left
+        // 5: full screen (handled separately)
+        6: .rightHalf,          // 1/2 × full right
+        7: .topLeftCorner,      // 1/2 × 1/2 top-left
+        8: .topHalf,            // full × 1/2 top
+        9: .topRightCorner      // 1/2 × 1/2 top-right
     ]
 
     private init() {}
@@ -105,25 +135,7 @@ class KeyboardShortcutManager {
 
         let keyCode = event.getIntegerValueField(.keyboardEventKeycode)
 
-        // Get number from key code
-        let number = numpadKeyCodeToNumber[keyCode] ?? regularKeyCodeToNumber[keyCode]
-
-        // Track key up/down for combo detection
-        if let num = number {
-            if type == .keyUp {
-                heldKeys.remove(num)
-                return Unmanaged.passRetained(event)
-            }
-            // keyDown - add to held keys
-            heldKeys.insert(num)
-        }
-
-        // Only process keyDown
-        guard type == .keyDown else {
-            return Unmanaged.passRetained(event)
-        }
-
-        // Check modifiers
+        // Check modifiers first
         let flags = event.flags
         let hasCtrl = flags.contains(.maskControl)
         let hasFn = flags.contains(.maskSecondaryFn)
@@ -131,22 +143,47 @@ class KeyboardShortcutManager {
         let hasShift = flags.contains(.maskShift)
         let hasOption = flags.contains(.maskAlternate)
 
-        let validModifiers = (hasCtrl && hasFn && !hasCmd && !hasShift) ||
-                            (hasCtrl && hasOption && !hasCmd && !hasShift)
+        // Check for valid modifier combinations
+        // Normal mode: Ctrl + Option (no Shift) OR Ctrl + Fn (no Shift)
+        // Half mode: Ctrl + Option + Shift OR Ctrl + Fn + Shift
+        let baseModifiers = (hasCtrl && hasOption && !hasCmd) || (hasCtrl && hasFn && !hasCmd)
+        let isHalfMode = baseModifiers && hasShift
+        let isNormalMode = baseModifiers && !hasShift
 
-        guard validModifiers, number != nil else {
+        let validModifiers = isHalfMode || isNormalMode
+
+        // Get number from key code
+        let number = numpadKeyCodeToNumber[keyCode] ?? regularKeyCodeToNumber[keyCode]
+
+        guard let num = number, validModifiers else {
             return Unmanaged.passRetained(event)
         }
 
-        // Debounce: prevent double-triggering
+        // Only handle keyDown
+        guard type == .keyDown else {
+            // Clean up held keys on keyUp
+            if type == .keyUp {
+                heldKeys.remove(num)
+                if heldKeys.isEmpty {
+                    comboTriggered = false
+                }
+            }
+            return nil
+        }
+
+        // Debounce
         let now = Date()
         guard now.timeIntervalSince(lastActionTime) > 0.1 else {
             return nil
         }
 
-        // Check for half-position combo (two keys held)
+        // Track held keys for multi-key combos
+        heldKeys.insert(num)
+
+        // Check for multi-key combo first (2+ keys held)
         if heldKeys.count >= 2 {
             if let halfPos = halfPositionCombos[heldKeys] {
+                comboTriggered = true
                 lastActionTime = now
                 DispatchQueue.main.async {
                     let success = WindowManager.shared.moveWindowToHalf(halfPos)
@@ -156,17 +193,36 @@ class KeyboardShortcutManager {
             }
         }
 
-        // Single key - regular grid position
-        if let num = number, let position = numberToPosition[num] {
-            lastActionTime = now
-            DispatchQueue.main.async {
-                let success = WindowManager.shared.moveWindow(to: position)
-                if !success { NSSound.beep() }
+        // Single key - check if half mode (Option pressed)
+        if hasOption {
+            // Half mode
+            if num == 5 {
+                let halfPos: HalfPosition = lastFiveWasFullScreen ? .centerHalf : .fullScreen
+                lastFiveWasFullScreen = !lastFiveWasFullScreen
+                lastActionTime = now
+                DispatchQueue.main.async {
+                    let success = WindowManager.shared.moveWindowToHalf(halfPos)
+                    if !success { NSSound.beep() }
+                }
+            } else if let halfPos = numberToHalfPosition[num] {
+                lastActionTime = now
+                DispatchQueue.main.async {
+                    let success = WindowManager.shared.moveWindowToHalf(halfPos)
+                    if !success { NSSound.beep() }
+                }
             }
-            return nil
+        } else {
+            // Normal 1/3 mode
+            if let position = numberToPosition[num] {
+                lastActionTime = now
+                DispatchQueue.main.async {
+                    let success = WindowManager.shared.moveWindow(to: position)
+                    if !success { NSSound.beep() }
+                }
+            }
         }
 
-        return Unmanaged.passRetained(event)
+        return nil
     }
 
     deinit {

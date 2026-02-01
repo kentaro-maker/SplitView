@@ -11,13 +11,35 @@ enum HalfPosition: String, CaseIterable {
     case bottomLeftHalf = "12"   // 1+2
     case bottomRightHalf = "23"  // 2+3
 
-    // Vertical halves (1/3 width × 1/2 height)
+    // Vertical halves (1/3 width × 2/3 height)
     case leftTopHalf = "74"      // 7+4
     case leftBottomHalf = "41"   // 4+1
     case centerTopHalf = "85"    // 8+5
     case centerBottomHalf = "52" // 5+2
     case rightTopHalf = "96"     // 9+6
     case rightBottomHalf = "63"  // 6+3
+
+    // Corner quarters (2/3 width × 2/3 height)
+    case topLeftQuarter = "75"      // 7+5
+    case topRightQuarter = "95"     // 9+5
+    case bottomLeftQuarter = "15"   // 1+5
+    case bottomRightQuarter = "35"  // 3+5
+
+    // True halves (1/2 screen)
+    case leftHalf = "71"            // 7+1
+    case rightHalf = "93"           // 9+3
+    case topHalf = "79"             // 7+9
+    case bottomHalf = "13"          // 1+3
+
+    // True corners (1/4 screen - 1/2 × 1/2)
+    case topLeftCorner = "179"      // 7+9 (top) + 7+1 (left)
+    case topRightCorner = "379"     // 7+9 (top) + 9+3 (right)
+    case bottomLeftCorner = "137"   // 1+3 (bottom) + 7+1 (left)
+    case bottomRightCorner = "139"  // 1+3 (bottom) + 9+3 (right)
+
+    // Full screen and center
+    case fullScreen = "5f"          // 5 first press
+    case centerHalf = "5c"          // 5 second press (1/2 × 1/2 centered)
 
     /// Human-readable name
     var displayName: String {
@@ -34,6 +56,20 @@ enum HalfPosition: String, CaseIterable {
         case .centerBottomHalf: return "Center Bottom Half"
         case .rightTopHalf: return "Right Top Half"
         case .rightBottomHalf: return "Right Bottom Half"
+        case .topLeftQuarter: return "Top Left Quarter"
+        case .topRightQuarter: return "Top Right Quarter"
+        case .bottomLeftQuarter: return "Bottom Left Quarter"
+        case .bottomRightQuarter: return "Bottom Right Quarter"
+        case .leftHalf: return "Left Half"
+        case .rightHalf: return "Right Half"
+        case .topHalf: return "Top Half"
+        case .bottomHalf: return "Bottom Half"
+        case .topLeftCorner: return "Top Left Corner"
+        case .topRightCorner: return "Top Right Corner"
+        case .bottomLeftCorner: return "Bottom Left Corner"
+        case .bottomRightCorner: return "Bottom Right Corner"
+        case .fullScreen: return "Full Screen"
+        case .centerHalf: return "Center Half"
         }
     }
 
@@ -41,6 +77,16 @@ enum HalfPosition: String, CaseIterable {
     var isHorizontal: Bool {
         switch self {
         case .topLeftHalf, .topRightHalf, .middleLeftHalf, .middleRightHalf, .bottomLeftHalf, .bottomRightHalf:
+            return true
+        default:
+            return false
+        }
+    }
+
+    /// Check if this is a corner quarter (2/3 × 2/3)
+    var isQuarter: Bool {
+        switch self {
+        case .topLeftQuarter, .topRightQuarter, .bottomLeftQuarter, .bottomRightQuarter:
             return true
         default:
             return false
