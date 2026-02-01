@@ -16,76 +16,62 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 
 ## Keyboard Shortcuts
 
-Use `Ctrl + Fn + [1-9]` or `Ctrl + Option + [1-9]` with numpad layout.
+### Quick Reference
 
-### Normal Mode (1/3 × 1/3 Grid)
+| Shortcut | Single Key | Multi-Key Combo |
+|----------|------------|-----------------|
+| **Ctrl + Fn + num** | 1/3 × 1/3 grid | 1/3 column or row (full height/width) |
+| **Ctrl + Fn + Option + num** | 1/2 positions | 2/3 positions, 1/4 corners |
 
-`Ctrl + Fn + number` or `Ctrl + Option + number`:
+### Ctrl + Fn + number (Normal Mode)
 
+**Single key → 1/3 × 1/3 grid:**
 ```
 ┌─────────┬─────────┬─────────┐
 │    7    │    8    │    9    │
-│Top-Left │Top-Centr│Top-Right│
 ├─────────┼─────────┼─────────┤
 │    4    │    5    │    6    │
-│Mid-Left │ Center  │Mid-Right│
 ├─────────┼─────────┼─────────┤
 │    1    │    2    │    3    │
-│Bot-Left │Bot-Centr│Bot-Right│
 └─────────┴─────────┴─────────┘
 ```
 
-### Half Mode (1/2 Screen Positions)
+**Multi-key → 1/3 columns & rows:**
 
-Add **Option** key: `Ctrl + Fn + Option + number`:
+| Keys | Result |
+|------|--------|
+| 7+1 | Left column (1/3 width × full height) |
+| 8+2 | Center column (1/3 width × full height) |
+| 9+3 | Right column (1/3 width × full height) |
+| 7+9 | Top row (full width × 1/3 height) |
+| 4+6 | Middle row (full width × 1/3 height) |
+| 1+3 | Bottom row (full width × 1/3 height) |
 
-```
-┌──────────┬──────────┬──────────┐
-│    7     │    8     │    9     │
-│ 1/2×1/2  │ full×1/2 │ 1/2×1/2  │
-│ corner   │   top    │  corner  │
-├──────────┼──────────┼──────────┤
-│    4     │    5     │    6     │
-│ 1/2×full │ toggle:  │ 1/2×full │
-│  left    │full/half │  right   │
-├──────────┼──────────┼──────────┤
-│    1     │    2     │    3     │
-│ 1/2×1/2  │ full×1/2 │ 1/2×1/2  │
-│ corner   │  bottom  │  corner  │
-└──────────┴──────────┴──────────┘
-```
+### Ctrl + Fn + Option + number (Half Mode)
 
-**Note:** Key 5 in half mode toggles between full screen and centered half (1/2 × 1/2).
+**Single key → 1/2 positions:**
 
-### Multi-Key Combos
+| Key | Result |
+|-----|--------|
+| 7, 9, 1, 3 | Corners (1/2 × 1/2) |
+| 8 | Top half (full × 1/2) |
+| 2 | Bottom half (full × 1/2) |
+| 4 | Left half (1/2 × full) |
+| 6 | Right half (1/2 × full) |
+| 5 | Toggle: full screen ↔ centered (1/2 × 1/2) |
 
-Hold two or more keys simultaneously:
+**Multi-key → 2/3 and 1/4 positions:**
 
-#### Without Option (1/3 columns & rows)
-
-| Keys | Position |
-|------|----------|
-| 7+1, 7+4, 4+1 | Left third (1/3 width × full height) |
-| 8+2, 8+5, 5+2 | Center third (1/3 width × full height) |
-| 9+3, 9+6, 6+3 | Right third (1/3 width × full height) |
-| 7+9, 7+8, 8+9 | Top third (full width × 1/3 height) |
-| 4+6, 4+5, 5+6 | Middle third (full width × 1/3 height) |
-| 1+3, 1+2, 2+3 | Bottom third (full width × 1/3 height) |
-
-#### With Option (1/2 & 2/3 positions)
-
-| Keys | Position |
-|------|----------|
+| Keys | Result |
+|------|--------|
 | 7+8, 8+9 | Top 2/3 width |
-| 4+5, 5+6 | Middle 2/3 width |
 | 1+2, 2+3 | Bottom 2/3 width |
 | 7+4, 4+1 | Left 2/3 height |
-| 8+5, 5+2 | Center 2/3 height |
 | 9+6, 6+3 | Right 2/3 height |
-| 7+1, 9+3 | Left/Right half (1/2 × full) |
-| 7+9, 1+3 | Top/Bottom half (full × 1/2) |
-| 1+7+9, 3+7+9 | Top corners (1/4 screen) |
-| 1+3+7, 1+3+9 | Bottom corners (1/4 screen) |
+| 1+7+9 | Top-left corner (1/4) |
+| 3+7+9 | Top-right corner (1/4) |
+| 1+3+7 | Bottom-left corner (1/4) |
+| 1+3+9 | Bottom-right corner (1/4) |
 
 ## Installation
 

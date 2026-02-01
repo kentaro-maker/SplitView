@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file helps Claude Code (AI coding assistant) understand this codebase.
 
 ## Build Commands
 
@@ -88,34 +88,19 @@ graph TD
 
 ### Shortcut Modes
 
-The app has two modes controlled by the Option key:
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│ Normal Mode (Ctrl+Fn or Ctrl+Option, no extra Option)       │
-├─────────────────────────────────────────────────────────────┤
-│ Single key:  1/3 × 1/3 grid cell                            │
-│ Combo 7+1:   Left third (1/3 width × full height)           │
-│ Combo 8+2:   Center third (1/3 width × full height)         │
-│ Combo 9+3:   Right third (1/3 width × full height)          │
-│ Combo 7+9:   Top third (full width × 1/3 height)            │
-│ Combo 4+6:   Middle third (full width × 1/3 height)         │
-│ Combo 1+3:   Bottom third (full width × 1/3 height)         │
-└─────────────────────────────────────────────────────────────┘
-
-┌─────────────────────────────────────────────────────────────┐
-│ Half Mode (Ctrl+Fn+Option)                                  │
-├─────────────────────────────────────────────────────────────┤
-│ Single key:  1/2 positions (corners, edges)                 │
-│ Key 5:       Toggle full screen / centered half             │
-│ Combos:      2/3 positions, 1/4 corners                     │
-└─────────────────────────────────────────────────────────────┘
-```
+| Shortcut | Single Key | Multi-Key |
+|----------|------------|-----------|
+| Ctrl+Fn+num | 1/3 × 1/3 grid | 1/3 column/row (full height/width) |
+| Ctrl+Fn+Option+num | 1/2 corners/edges | 2/3 positions, 1/4 corners |
 
 **Key detection logic** (in `handleEvent`):
-1. Check if Option is pressed → determines mode
-2. Check for multi-key combos first (2+ keys held)
-3. Fall back to single-key action
+1. `hasOption` → determines Normal vs Half mode
+2. `heldKeys.count >= 2` → check combo dictionaries
+3. Single key → `numberToPosition` or `numberToHalfPosition`
+
+**Combo dictionaries:**
+- `thirdPositionCombos`: Without Option (1/3 full-height columns, full-width rows)
+- `halfPositionCombos`: With Option (2/3 positions, 1/2 halves, 1/4 corners)
 
 ### Coordinate Systems
 
