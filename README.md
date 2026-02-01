@@ -1,6 +1,6 @@
 # SplitView
 
-A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboard shortcuts.
+A lightweight macOS menu bar app for window tiling with intuitive numpad shortcuts.
 
 ![macOS](https://img.shields.io/badge/macOS-12.0%2B-blue)
 ![Swift](https://img.shields.io/badge/Swift-5-orange)
@@ -8,11 +8,9 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 
 ## Features
 
-- **3×3 Grid Snapping** - Divide your screen into 9 equal sections (1/3 × 1/3)
-- **Half-Screen Tiling** - Add Option key for 1/2 screen positions
-- **Numpad Layout** - Intuitive keyboard shortcuts matching numpad positions
-- **Menu Bar App** - Runs quietly in your menu bar, no dock icon
-- **Lightweight** - Native Swift, no dependencies
+- **Numpad = Screen position** - Press 7 → top-left, Press 3 → bottom-right. Intuitive.
+- **Two sizes** - Normal (1/3 screen) or add Option key for half (1/2 screen)
+- **Lightweight** - Native Swift, menu bar app, no dock icon
 
 ## Keyboard Shortcuts
 
@@ -111,7 +109,7 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/SplitView.git
+   git clone https://github.com/kentaro-maker/SplitView.git
    cd SplitView
    ```
 
@@ -136,17 +134,10 @@ The built app will be in `~/Library/Developer/Xcode/DerivedData/SplitView-*/Buil
 
 ## Usage
 
-1. Launch SplitView - a grid icon appears in your menu bar
-2. Click on any window you want to move
-3. Press `Ctrl + Option + [1-9]` to snap to that grid position
-
-### Menu Bar Options
-
-Click the grid icon in the menu bar to:
-- See all available shortcuts
-- Check accessibility permission status
-- Manually snap windows by clicking positions
-- Quit the app
+1. Launch SplitView - grid icon appears in menu bar
+2. Focus any window
+3. Press `Ctrl + Fn + [1-9]` → window snaps to that position
+4. Add `Option` for half-size positions
 
 ## Requirements
 
