@@ -67,7 +67,7 @@ class KeyboardShortcutManager {
         7: .topLeft, 8: .topCenter, 9: .topRight
     ]
 
-    // Number to HalfPosition (when Option+Fn+Ctrl is pressed)
+    // Number to HalfPosition (when Option is pressed - single key)
     private let numberToHalfPosition: [Int: HalfPosition] = [
         1: .bottomLeftCorner,   // 1/2 × 1/2 bottom-left
         2: .bottomHalf,         // full × 1/2 bottom
@@ -78,6 +78,36 @@ class KeyboardShortcutManager {
         7: .topLeftCorner,      // 1/2 × 1/2 top-left
         8: .topHalf,            // full × 1/2 top
         9: .topRightCorner      // 1/2 × 1/2 top-right
+    ]
+
+    // Third position combos (without Option - 1/3 width full height or full width 1/3 height)
+    private let thirdPositionCombos: [Set<Int>: HalfPosition] = [
+        // Vertical thirds (1/3 width × full height)
+        [7, 1]: .leftThird,
+        [7, 4]: .leftThird,
+        [4, 1]: .leftThird,
+        [7, 4, 1]: .leftThird,
+        [8, 2]: .centerThird,
+        [8, 5]: .centerThird,
+        [5, 2]: .centerThird,
+        [8, 5, 2]: .centerThird,
+        [9, 3]: .rightThird,
+        [9, 6]: .rightThird,
+        [6, 3]: .rightThird,
+        [9, 6, 3]: .rightThird,
+        // Horizontal thirds (full width × 1/3 height)
+        [7, 9]: .topThird,
+        [7, 8]: .topThird,
+        [8, 9]: .topThird,
+        [7, 8, 9]: .topThird,
+        [4, 6]: .middleThird,
+        [4, 5]: .middleThird,
+        [5, 6]: .middleThird,
+        [4, 5, 6]: .middleThird,
+        [1, 3]: .bottomThird,
+        [1, 2]: .bottomThird,
+        [2, 3]: .bottomThird,
+        [1, 2, 3]: .bottomThird
     ]
 
     private init() {}
@@ -182,7 +212,21 @@ class KeyboardShortcutManager {
 
         // Check for multi-key combo first (2+ keys held)
         if heldKeys.count >= 2 {
-            if let halfPos = halfPositionCombos[heldKeys] {
+            // With Option: use half position combos (1/2 screen)
+            // Without Option: use third position combos (1/3 full height/width)
+            let comboDict = hasOption ? halfPositionCombos : thirdPositionCombos
+            if let halfPos = comboDict[heldKeys] {
+                comboTriggered = true
+                lastActionTime = now
+                DispatchQueue.main.async {
+                    let success = WindowManager.shared.moveWindowToHalf(halfPos)
+                    if !success { NSSound.beep() }
+                }
+                return nil
+            }
+            // If no match in primary dict, try the other one as fallback
+            let fallbackDict = hasOption ? thirdPositionCombos : halfPositionCombos
+            if let halfPos = fallbackDict[heldKeys] {
                 comboTriggered = true
                 lastActionTime = now
                 DispatchQueue.main.async {

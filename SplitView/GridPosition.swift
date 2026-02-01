@@ -41,6 +41,16 @@ enum HalfPosition: String, CaseIterable {
     case fullScreen = "5f"          // 5 first press
     case centerHalf = "5c"          // 5 second press (1/2 × 1/2 centered)
 
+    // Third columns (1/3 width × full height)
+    case leftThird = "71t"          // 7+1 without Option
+    case centerThird = "82t"        // 8+2 without Option
+    case rightThird = "93t"         // 9+3 without Option
+
+    // Third rows (full width × 1/3 height)
+    case topThird = "79t"           // 7+9 without Option
+    case middleThird = "46t"        // 4+6 without Option
+    case bottomThird = "13t"        // 1+3 without Option
+
     /// Human-readable name
     var displayName: String {
         switch self {
@@ -70,6 +80,12 @@ enum HalfPosition: String, CaseIterable {
         case .bottomRightCorner: return "Bottom Right Corner"
         case .fullScreen: return "Full Screen"
         case .centerHalf: return "Center Half"
+        case .leftThird: return "Left Third"
+        case .centerThird: return "Center Third"
+        case .rightThird: return "Right Third"
+        case .topThird: return "Top Third"
+        case .middleThird: return "Middle Third"
+        case .bottomThird: return "Bottom Third"
         }
     }
 

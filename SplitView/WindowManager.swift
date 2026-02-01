@@ -311,6 +311,40 @@ class WindowManager {
             cocoaY = visible.origin.y + visible.height / 4
             width = visible.width / 2
             height = visible.height / 2
+
+        // Third columns (1/3 width × full height)
+        case .leftThird:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = cellW
+            height = visible.height
+        case .centerThird:
+            cocoaX = visible.origin.x + cellW
+            cocoaY = visible.origin.y
+            width = cellW
+            height = visible.height
+        case .rightThird:
+            cocoaX = visible.origin.x + 2 * cellW
+            cocoaY = visible.origin.y
+            width = cellW
+            height = visible.height
+
+        // Third rows (full width × 1/3 height)
+        case .topThird:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y + 2 * cellH
+            width = visible.width
+            height = cellH
+        case .middleThird:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y + cellH
+            width = visible.width
+            height = cellH
+        case .bottomThird:
+            cocoaX = visible.origin.x
+            cocoaY = visible.origin.y
+            width = visible.width
+            height = cellH
         }
 
         // Convert to AX coordinates
