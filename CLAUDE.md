@@ -94,13 +94,21 @@ graph TD
 | Ctrl+Fn+Option+num | 1/2 corners/edges | 2/3 positions, 1/4 corners |
 
 **Key detection logic** (in `handleEvent`):
-1. `hasOption` → determines Normal vs Half mode
-2. `heldKeys.count >= 2` → check combo dictionaries
-3. Single key → `numberToPosition` or `numberToHalfPosition`
+
+| Step | Check | Action |
+|------|-------|--------|
+| 1 | `hasOption` | Determines Normal vs Half mode |
+| 2 | `heldKeys.count >= 2` | Check combo dictionaries |
+| 3 | Single key | Use `numberToPosition` or `numberToHalfPosition` |
 
 **Combo dictionaries:**
-- `thirdPositionCombos`: Without Option (1/3 full-height columns, full-width rows)
-- `halfPositionCombos`: With Option (2/3 positions, 1/2 halves, 1/4 corners)
+
+| Dictionary | When | Result |
+|------------|------|--------|
+| `thirdPositionCombos` | Without Option | 1/3 columns (7+1), rows (7+9) |
+| `halfPositionCombos` | With Option | 2/3 (7+8), 1/2 (7+1), 1/4 (1+7+9) |
+| `numberToPosition` | Normal single key | 1/3 × 1/3 grid |
+| `numberToHalfPosition` | Half single key | 1/2 positions |
 
 ### Coordinate Systems
 

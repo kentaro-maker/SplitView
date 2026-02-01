@@ -16,62 +16,61 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 
 ## Keyboard Shortcuts
 
-### Quick Reference
-
-| Shortcut | Single Key | Multi-Key Combo |
-|----------|------------|-----------------|
-| **Ctrl + Fn + num** | 1/3 × 1/3 grid | 1/3 column or row (full height/width) |
-| **Ctrl + Fn + Option + num** | 1/2 positions | 2/3 positions, 1/4 corners |
-
 ### Ctrl + Fn + number (Normal Mode)
 
-**Single key → 1/3 × 1/3 grid:**
-```
-┌─────────┬─────────┬─────────┐
-│    7    │    8    │    9    │
-├─────────┼─────────┼─────────┤
-│    4    │    5    │    6    │
-├─────────┼─────────┼─────────┤
-│    1    │    2    │    3    │
-└─────────┴─────────┴─────────┘
-```
-
-**Multi-key → 1/3 columns & rows:**
-
-| Keys | Result |
-|------|--------|
-| 7+1 | Left column (1/3 width × full height) |
-| 8+2 | Center column (1/3 width × full height) |
-| 9+3 | Right column (1/3 width × full height) |
-| 7+9 | Top row (full width × 1/3 height) |
-| 4+6 | Middle row (full width × 1/3 height) |
-| 1+3 | Bottom row (full width × 1/3 height) |
+| Keys | Result | Size |
+|------|--------|------|
+| **Single Key** |||
+| 7 | Top-left | 1/3 × 1/3 |
+| 8 | Top-center | 1/3 × 1/3 |
+| 9 | Top-right | 1/3 × 1/3 |
+| 4 | Middle-left | 1/3 × 1/3 |
+| 5 | Center | 1/3 × 1/3 |
+| 6 | Middle-right | 1/3 × 1/3 |
+| 1 | Bottom-left | 1/3 × 1/3 |
+| 2 | Bottom-center | 1/3 × 1/3 |
+| 3 | Bottom-right | 1/3 × 1/3 |
+| **Multi-Key** |||
+| 7+1 | Left column | 1/3 × full |
+| 8+2 | Center column | 1/3 × full |
+| 9+3 | Right column | 1/3 × full |
+| 7+9 | Top row | full × 1/3 |
+| 4+6 | Middle row | full × 1/3 |
+| 1+3 | Bottom row | full × 1/3 |
 
 ### Ctrl + Fn + Option + number (Half Mode)
 
-**Single key → 1/2 positions:**
-
-| Key | Result |
-|-----|--------|
-| 7, 9, 1, 3 | Corners (1/2 × 1/2) |
-| 8 | Top half (full × 1/2) |
-| 2 | Bottom half (full × 1/2) |
-| 4 | Left half (1/2 × full) |
-| 6 | Right half (1/2 × full) |
-| 5 | Toggle: full screen ↔ centered (1/2 × 1/2) |
-
-**Multi-key → 2/3 and 1/4 positions:**
-
-| Keys | Result |
-|------|--------|
-| 7+8, 8+9 | Top 2/3 width |
-| 1+2, 2+3 | Bottom 2/3 width |
-| 7+4, 4+1 | Left 2/3 height |
-| 9+6, 6+3 | Right 2/3 height |
-| 1+7+9 | Top-left corner (1/4) |
-| 3+7+9 | Top-right corner (1/4) |
-| 1+3+7 | Bottom-left corner (1/4) |
-| 1+3+9 | Bottom-right corner (1/4) |
+| Keys | Result | Size |
+|------|--------|------|
+| **Single Key** |||
+| 7 | Top-left corner | 1/2 × 1/2 |
+| 8 | Top half | full × 1/2 |
+| 9 | Top-right corner | 1/2 × 1/2 |
+| 4 | Left half | 1/2 × full |
+| 5 | Toggle: full ↔ center | full / 1/2 × 1/2 |
+| 6 | Right half | 1/2 × full |
+| 1 | Bottom-left corner | 1/2 × 1/2 |
+| 2 | Bottom half | full × 1/2 |
+| 3 | Bottom-right corner | 1/2 × 1/2 |
+| **Multi-Key** |||
+| 7+8 | Top-left | 2/3 × 1/3 |
+| 8+9 | Top-right | 2/3 × 1/3 |
+| 4+5 | Middle-left | 2/3 × 1/3 |
+| 5+6 | Middle-right | 2/3 × 1/3 |
+| 1+2 | Bottom-left | 2/3 × 1/3 |
+| 2+3 | Bottom-right | 2/3 × 1/3 |
+| 7+4 | Left-top | 1/3 × 2/3 |
+| 4+1 | Left-bottom | 1/3 × 2/3 |
+| 9+6 | Right-top | 1/3 × 2/3 |
+| 6+3 | Right-bottom | 1/3 × 2/3 |
+| 7+1 | Left half | 1/2 × full |
+| 9+3 | Right half | 1/2 × full |
+| 7+9 | Top half | full × 1/2 |
+| 1+3 | Bottom half | full × 1/2 |
+| 1+7+9 | Top-left corner | 1/4 screen |
+| 3+7+9 | Top-right corner | 1/4 screen |
+| 1+3+7 | Bottom-left corner | 1/4 screen |
+| 1+3+9 | Bottom-right corner | 1/4 screen |
 
 ## Installation
 
