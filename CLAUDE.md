@@ -145,3 +145,34 @@ App requires:
 - Add app to System Settings → Privacy & Security → Accessibility
 
 Info.plist includes `LSUIElement=true` (menu bar app) and `NSAccessibilityUsageDescription`.
+
+## Development Notes
+
+### Current State (2026-02-01)
+- App is fully functional with two modes (Normal 1/3 and Half 1/2)
+- Published to GitHub: https://github.com/kentaro-maker/SplitView
+- Core concept: numpad position = screen position (intuitive)
+
+### Key Design Decisions
+- Trigger on keyDown (instant response, no lag)
+- Option key toggles between 1/3 and 1/2 modes
+- Multi-key combos for columns/rows (7+1 = left column)
+- Key 5 with Option toggles full screen ↔ centered half
+
+### Potential Future Ideas
+- [ ] Preferences window for custom shortcuts
+- [ ] Multiple monitor support improvements
+- [ ] Animation when snapping windows
+- [ ] Drag-to-edge snapping
+- [ ] Keyboard shortcut hints overlay
+
+### Known Issues
+- None currently reported
+
+### How to Continue Development
+1. Read this file to understand the architecture
+2. Check README.md for user-facing features
+3. Main files to modify:
+   - `KeyboardShortcutManager.swift` - shortcut logic
+   - `WindowManager.swift` - window positioning
+   - `GridPosition.swift` - position enums
