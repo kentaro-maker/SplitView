@@ -18,59 +18,105 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 
 ### Ctrl + Fn + number (Normal Mode)
 
-| Keys | Result | Size |
-|------|--------|------|
-| **Single Key** |||
-| 7 | Top-left | 1/3 × 1/3 |
-| 8 | Top-center | 1/3 × 1/3 |
-| 9 | Top-right | 1/3 × 1/3 |
-| 4 | Middle-left | 1/3 × 1/3 |
-| 5 | Center | 1/3 × 1/3 |
-| 6 | Middle-right | 1/3 × 1/3 |
-| 1 | Bottom-left | 1/3 × 1/3 |
-| 2 | Bottom-center | 1/3 × 1/3 |
-| 3 | Bottom-right | 1/3 × 1/3 |
-| **Multi-Key** |||
-| 7+1 | Left column | 1/3 × full |
-| 8+2 | Center column | 1/3 × full |
-| 9+3 | Right column | 1/3 × full |
-| 7+9 | Top row | full × 1/3 |
-| 4+6 | Middle row | full × 1/3 |
-| 1+3 | Bottom row | full × 1/3 |
+**Single key → 1/3 × 1/3 grid:**
+```
+┌──────────┬──────────┬──────────┐
+│    7     │    8     │    9     │
+│ 1/3×1/3  │ 1/3×1/3  │ 1/3×1/3  │
+│ top-left │ top-ctr  │ top-right│
+├──────────┼──────────┼──────────┤
+│    4     │    5     │    6     │
+│ 1/3×1/3  │ 1/3×1/3  │ 1/3×1/3  │
+│ mid-left │  center  │ mid-right│
+├──────────┼──────────┼──────────┤
+│    1     │    2     │    3     │
+│ 1/3×1/3  │ 1/3×1/3  │ 1/3×1/3  │
+│ bot-left │ bot-ctr  │ bot-right│
+└──────────┴──────────┴──────────┘
+```
+
+**Multi-key → 1/3 columns & rows:**
+```
+┌──────────┬──────────┬──────────┐
+│   7+1    │   8+2    │   9+3    │
+│ 1/3×full │ 1/3×full │ 1/3×full │
+│  left    │  center  │  right   │
+│  column  │  column  │  column  │
+└──────────┴──────────┴──────────┘
+
+┌─────────────────────────────────┐
+│             7+9                 │
+│         full × 1/3              │
+│          top row                │
+├─────────────────────────────────┤
+│             4+6                 │
+│         full × 1/3              │
+│        middle row               │
+├─────────────────────────────────┤
+│             1+3                 │
+│         full × 1/3              │
+│        bottom row               │
+└─────────────────────────────────┘
+```
 
 ### Ctrl + Fn + Option + number (Half Mode)
 
-| Keys | Result | Size |
-|------|--------|------|
-| **Single Key** |||
-| 7 | Top-left corner | 1/2 × 1/2 |
-| 8 | Top half | full × 1/2 |
-| 9 | Top-right corner | 1/2 × 1/2 |
-| 4 | Left half | 1/2 × full |
-| 5 | Toggle: full ↔ center | full / 1/2 × 1/2 |
-| 6 | Right half | 1/2 × full |
-| 1 | Bottom-left corner | 1/2 × 1/2 |
-| 2 | Bottom half | full × 1/2 |
-| 3 | Bottom-right corner | 1/2 × 1/2 |
-| **Multi-Key** |||
-| 7+8 | Top-left | 2/3 × 1/3 |
-| 8+9 | Top-right | 2/3 × 1/3 |
-| 4+5 | Middle-left | 2/3 × 1/3 |
-| 5+6 | Middle-right | 2/3 × 1/3 |
-| 1+2 | Bottom-left | 2/3 × 1/3 |
-| 2+3 | Bottom-right | 2/3 × 1/3 |
-| 7+4 | Left-top | 1/3 × 2/3 |
-| 4+1 | Left-bottom | 1/3 × 2/3 |
-| 9+6 | Right-top | 1/3 × 2/3 |
-| 6+3 | Right-bottom | 1/3 × 2/3 |
-| 7+1 | Left half | 1/2 × full |
-| 9+3 | Right half | 1/2 × full |
-| 7+9 | Top half | full × 1/2 |
-| 1+3 | Bottom half | full × 1/2 |
-| 1+7+9 | Top-left corner | 1/4 screen |
-| 3+7+9 | Top-right corner | 1/4 screen |
-| 1+3+7 | Bottom-left corner | 1/4 screen |
-| 1+3+9 | Bottom-right corner | 1/4 screen |
+**Single key → 1/2 positions:**
+```
+┌──────────┬──────────┬──────────┐
+│    7     │    8     │    9     │
+│ 1/2×1/2  │ full×1/2 │ 1/2×1/2  │
+│ corner   │   top    │  corner  │
+├──────────┼──────────┼──────────┤
+│    4     │    5     │    6     │
+│ 1/2×full │ toggle:  │ 1/2×full │
+│  left    │full/half │  right   │
+├──────────┼──────────┼──────────┤
+│    1     │    2     │    3     │
+│ 1/2×1/2  │ full×1/2 │ 1/2×1/2  │
+│ corner   │  bottom  │  corner  │
+└──────────┴──────────┴──────────┘
+```
+
+**Multi-key → 2/3 positions:**
+```
+┌─────────────────────┬──────────┐
+│        7+8          │   8+9    │
+│      2/3×1/3        │ 2/3×1/3  │
+│     top-left        │top-right │
+├─────────────────────┼──────────┤
+│        4+5          │   5+6    │
+│      2/3×1/3        │ 2/3×1/3  │
+│     mid-left        │mid-right │
+├─────────────────────┼──────────┤
+│        1+2          │   2+3    │
+│      2/3×1/3        │ 2/3×1/3  │
+│     bot-left        │bot-right │
+└─────────────────────┴──────────┘
+
+┌──────────┬──────────┐
+│   7+4    │   7+1    │
+│ 1/3×2/3  │ 1/2×full │
+│ left-top │   left   │
+├──────────┼──────────┤
+│   4+1    │   9+3    │
+│ 1/3×2/3  │ 1/2×full │
+│ left-bot │  right   │
+└──────────┴──────────┘
+```
+
+**3-key → 1/4 corners:**
+```
+┌──────────┬──────────┐
+│  1+7+9   │  3+7+9   │
+│ 1/2×1/2  │ 1/2×1/2  │
+│ top-left │top-right │
+├──────────┼──────────┤
+│  1+3+7   │  1+3+9   │
+│ 1/2×1/2  │ 1/2×1/2  │
+│ bot-left │bot-right │
+└──────────┴──────────┘
+```
 
 ## Installation
 
