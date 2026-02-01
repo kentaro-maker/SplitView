@@ -57,9 +57,22 @@ Add **Option** key: `Ctrl + Fn + Option + number`:
 
 **Note:** Key 5 in half mode toggles between full screen and centered half (1/2 × 1/2).
 
-### Multi-Key Combos (Advanced)
+### Multi-Key Combos
 
-Hold two adjacent keys for 2/3 positions:
+Hold two or more keys simultaneously:
+
+#### Without Option (1/3 columns & rows)
+
+| Keys | Position |
+|------|----------|
+| 7+1, 7+4, 4+1 | Left third (1/3 width × full height) |
+| 8+2, 8+5, 5+2 | Center third (1/3 width × full height) |
+| 9+3, 9+6, 6+3 | Right third (1/3 width × full height) |
+| 7+9, 7+8, 8+9 | Top third (full width × 1/3 height) |
+| 4+6, 4+5, 5+6 | Middle third (full width × 1/3 height) |
+| 1+3, 1+2, 2+3 | Bottom third (full width × 1/3 height) |
+
+#### With Option (1/2 & 2/3 positions)
 
 | Keys | Position |
 |------|----------|
@@ -69,8 +82,10 @@ Hold two adjacent keys for 2/3 positions:
 | 7+4, 4+1 | Left 2/3 height |
 | 8+5, 5+2 | Center 2/3 height |
 | 9+6, 6+3 | Right 2/3 height |
-| 7+1, 9+3 | Left/Right half (full height) |
-| 7+9, 1+3 | Top/Bottom half (full width) |
+| 7+1, 9+3 | Left/Right half (1/2 × full) |
+| 7+9, 1+3 | Top/Bottom half (full × 1/2) |
+| 1+7+9, 3+7+9 | Top corners (1/4 screen) |
+| 1+3+7, 1+3+9 | Bottom corners (1/4 screen) |
 
 ## Installation
 
