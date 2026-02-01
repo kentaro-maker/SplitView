@@ -52,12 +52,7 @@ class KeyboardShortcutManager {
         [7, 1]: .leftHalf,
         [9, 3]: .rightHalf,
         [7, 9]: .topHalf,
-        [1, 3]: .bottomHalf,
-        // True corners (1/4 screen) - 3 key combos
-        [1, 7, 9]: .topLeftCorner,
-        [3, 7, 9]: .topRightCorner,
-        [1, 3, 7]: .bottomLeftCorner,
-        [1, 3, 9]: .bottomRightCorner
+        [1, 3]: .bottomHalf
     ]
 
     // Number to GridPosition

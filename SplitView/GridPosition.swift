@@ -31,11 +31,11 @@ enum HalfPosition: String, CaseIterable {
     case topHalf = "79"             // 7+9
     case bottomHalf = "13"          // 1+3
 
-    // True corners (1/4 screen - 1/2 × 1/2)
-    case topLeftCorner = "179"      // 7+9 (top) + 7+1 (left)
-    case topRightCorner = "379"     // 7+9 (top) + 9+3 (right)
-    case bottomLeftCorner = "137"   // 1+3 (bottom) + 7+1 (left)
-    case bottomRightCorner = "139"  // 1+3 (bottom) + 9+3 (right)
+    // Corners (1/2 × 1/2) - for half mode single key
+    case topLeftCorner = "7c"
+    case topRightCorner = "9c"
+    case bottomLeftCorner = "1c"
+    case bottomRightCorner = "3c"
 
     // Full screen and center
     case fullScreen = "5f"          // 5 first press

@@ -105,19 +105,6 @@ A lightweight macOS menu bar app that snaps windows to a 3×3 grid using keyboar
 └──────────┴──────────┘
 ```
 
-**3-key → 1/4 corners:**
-```
-┌──────────┬──────────┐
-│  1+7+9   │  3+7+9   │
-│ 1/2×1/2  │ 1/2×1/2  │
-│ top-left │top-right │
-├──────────┼──────────┤
-│  1+3+7   │  1+3+9   │
-│ 1/2×1/2  │ 1/2×1/2  │
-│ bot-left │bot-right │
-└──────────┴──────────┘
-```
-
 ## Installation
 
 ### Build from Source
